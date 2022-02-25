@@ -20,17 +20,39 @@ namespace MovieCharacterAPI.Migrations
 
             modelBuilder.Entity("CharacterMovie", b =>
                 {
-                    b.Property<int>("CharactersId")
-                        .HasColumnType("int");
-
                     b.Property<int>("MoviesId")
                         .HasColumnType("int");
 
-                    b.HasKey("CharactersId", "MoviesId");
+                    b.Property<int>("CharactersId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("MoviesId");
+                    b.HasKey("MoviesId", "CharactersId");
+
+                    b.HasIndex("CharactersId");
 
                     b.ToTable("CharacterMovie");
+
+                    b.HasData(
+                        new
+                        {
+                            MoviesId = 1,
+                            CharactersId = 1
+                        },
+                        new
+                        {
+                            MoviesId = 2,
+                            CharactersId = 2
+                        },
+                        new
+                        {
+                            MoviesId = 3,
+                            CharactersId = 3
+                        },
+                        new
+                        {
+                            MoviesId = 4,
+                            CharactersId = 3
+                        });
                 });
 
             modelBuilder.Entity("MovieCharacterAPI.Models.Character", b =>
@@ -55,6 +77,32 @@ namespace MovieCharacterAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Characters");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Alias = "Iron man",
+                            CharacterPicture = "",
+                            FullName = "Robert Downey Jr",
+                            Gender = "Male"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Alias = "Frodo Baggins",
+                            CharacterPicture = "",
+                            FullName = "Elijah Wood",
+                            Gender = "Male"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Alias = "James Bond",
+                            CharacterPicture = "",
+                            FullName = "Roger Moore",
+                            Gender = "Male"
+                        });
                 });
 
             modelBuilder.Entity("MovieCharacterAPI.Models.Franchise", b =>
@@ -73,6 +121,26 @@ namespace MovieCharacterAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Franchises");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "The films based on characters that appear in comic books published by Marvel Comics",
+                            Name = "Marvel cinematic universe"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Fantasy films based on the novel written by J.R.R. Tolkien",
+                            Name = "The lord of the rings"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "A british secret agent working for MI6 under the codename 007",
+                            Name = "James Bond"
+                        });
                 });
 
             modelBuilder.Entity("MovieCharacterAPI.Models.Movie", b =>
@@ -108,6 +176,52 @@ namespace MovieCharacterAPI.Migrations
                     b.HasIndex("FranchiseId");
 
                     b.ToTable("Movies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Director = "Jon Favreau",
+                            FranchiseId = 1,
+                            Genre = "Action",
+                            MoviePicture = "url",
+                            MovieTitle = "Iron man",
+                            ReleaseYear = "2008",
+                            Trailer = "url"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Director = "Peter Jackson",
+                            FranchiseId = 2,
+                            Genre = "Fantasy",
+                            MoviePicture = "url",
+                            MovieTitle = "The fellowship of the ring",
+                            ReleaseYear = "2001",
+                            Trailer = "url"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Director = "Lewis Gilbert",
+                            FranchiseId = 3,
+                            Genre = "Action",
+                            MoviePicture = "url",
+                            MovieTitle = "Moonraker",
+                            ReleaseYear = "1979",
+                            Trailer = "url"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Director = "John Glen",
+                            FranchiseId = 3,
+                            Genre = "Action",
+                            MoviePicture = "url",
+                            MovieTitle = "Octopussy",
+                            ReleaseYear = "1983",
+                            Trailer = "url"
+                        });
                 });
 
             modelBuilder.Entity("CharacterMovie", b =>

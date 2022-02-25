@@ -2,7 +2,7 @@
 
 namespace MovieCharacterAPI.Migrations
 {
-    public partial class AddAllTables : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,12 +65,12 @@ namespace MovieCharacterAPI.Migrations
                 name: "CharacterMovie",
                 columns: table => new
                 {
-                    CharactersId = table.Column<int>(type: "int", nullable: false),
-                    MoviesId = table.Column<int>(type: "int", nullable: false)
+                    MoviesId = table.Column<int>(type: "int", nullable: false),
+                    CharactersId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CharacterMovie", x => new { x.CharactersId, x.MoviesId });
+                    table.PrimaryKey("PK_CharacterMovie", x => new { x.MoviesId, x.CharactersId });
                     table.ForeignKey(
                         name: "FK_CharacterMovie_Characters_CharactersId",
                         column: x => x.CharactersId,
@@ -85,10 +85,52 @@ namespace MovieCharacterAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_CharacterMovie_MoviesId",
+            migrationBuilder.InsertData(
+                table: "Characters",
+                columns: new[] { "Id", "Alias", "CharacterPicture", "FullName", "Gender" },
+                values: new object[,]
+                {
+                    { 1, "Iron man", "", "Robert Downey Jr", "Male" },
+                    { 2, "Frodo Baggins", "", "Elijah Wood", "Male" },
+                    { 3, "James Bond", "", "Roger Moore", "Male" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Franchises",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "The films based on characters that appear in comic books published by Marvel Comics", "Marvel cinematic universe" },
+                    { 2, "Fantasy films based on the novel written by J.R.R. Tolkien", "The lord of the rings" },
+                    { 3, "A british secret agent working for MI6 under the codename 007", "James Bond" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Movies",
+                columns: new[] { "Id", "Director", "FranchiseId", "Genre", "MoviePicture", "MovieTitle", "ReleaseYear", "Trailer" },
+                values: new object[,]
+                {
+                    { 1, "Jon Favreau", 1, "Action", "url", "Iron man", "2008", "url" },
+                    { 2, "Peter Jackson", 2, "Fantasy", "url", "The fellowship of the ring", "2001", "url" },
+                    { 3, "Lewis Gilbert", 3, "Action", "url", "Moonraker", "1979", "url" },
+                    { 4, "John Glen", 3, "Action", "url", "Octopussy", "1983", "url" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "CharacterMovie",
-                column: "MoviesId");
+                columns: new[] { "CharactersId", "MoviesId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 2 },
+                    { 3, 3 },
+                    { 3, 4 }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CharacterMovie_CharactersId",
+                table: "CharacterMovie",
+                column: "CharactersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Movies_FranchiseId",
