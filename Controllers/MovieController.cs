@@ -32,6 +32,12 @@ namespace MovieCharacterAPI.Controllers
             throw new NotImplementedException();
         }
 
+        [HttpGet]
+        public IAsyncResult GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
         [HttpPatch]
         public IAsyncResult Update()
         {
