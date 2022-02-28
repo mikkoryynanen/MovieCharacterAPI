@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieCharacterAPI.Models;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MovieCharacterAPI.Data
 {
@@ -10,9 +11,14 @@ namespace MovieCharacterAPI.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Franchise> Franchises { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=MovieCharacterAPIDb;Integrated Security=True;");
+        //}
+
+        public MovieCharacterAPIDbContext([NotNullAttribute] DbContextOptions options) : base(options)
         {
-            optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=MovieCharacterAPIDb;Integrated Security=True;");
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
