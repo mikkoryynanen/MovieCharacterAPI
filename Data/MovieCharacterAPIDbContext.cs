@@ -11,14 +11,8 @@ namespace MovieCharacterAPI.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Franchise> Franchises { get; set; }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=MovieCharacterAPIDb;Integrated Security=True;");
-        //}
-
         public MovieCharacterAPIDbContext([NotNullAttribute] DbContextOptions options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
