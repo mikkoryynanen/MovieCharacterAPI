@@ -63,16 +63,21 @@ namespace MovieCharacterAPI.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Alias")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CharacterPicture")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.HasKey("Id");
 
@@ -83,7 +88,7 @@ namespace MovieCharacterAPI.Migrations
                         {
                             Id = 1,
                             Alias = "Iron man",
-                            CharacterPicture = "",
+                            CharacterPicture = "https://th.bing.com/th/id/R.a1493b8983c19f3158df354f1c0fe054?rik=t6iG5uRzMhaPjw&pid=ImgRaw&r=0",
                             FullName = "Robert Downey Jr",
                             Gender = "Male"
                         },
@@ -91,7 +96,7 @@ namespace MovieCharacterAPI.Migrations
                         {
                             Id = 2,
                             Alias = "Frodo Baggins",
-                            CharacterPicture = "",
+                            CharacterPicture = "https://i.pinimg.com/736x/1b/93/84/1b9384b6de87ab45a1391d454bd695c5.jpg",
                             FullName = "Elijah Wood",
                             Gender = "Male"
                         },
@@ -99,7 +104,7 @@ namespace MovieCharacterAPI.Migrations
                         {
                             Id = 3,
                             Alias = "James Bond",
-                            CharacterPicture = "",
+                            CharacterPicture = "https://assets.mi6-hq.com/images/features/magazine-special4a.jpg",
                             FullName = "Roger Moore",
                             Gender = "Male"
                         });
@@ -116,7 +121,9 @@ namespace MovieCharacterAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -151,22 +158,27 @@ namespace MovieCharacterAPI.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Director")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("FranchiseId")
                         .HasColumnType("int");
 
                     b.Property<string>("Genre")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("MoviePicture")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MovieTitle")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ReleaseYear")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Trailer")
                         .HasColumnType("nvarchar(max)");
@@ -184,10 +196,10 @@ namespace MovieCharacterAPI.Migrations
                             Director = "Jon Favreau",
                             FranchiseId = 1,
                             Genre = "Action",
-                            MoviePicture = "url",
+                            MoviePicture = "https://th.bing.com/th/id/R.dc6072bd82f5c534f7f7583f451a5534?rik=GqOVQyAWzMtbcw&pid=ImgRaw&r=0",
                             MovieTitle = "Iron man",
                             ReleaseYear = "2008",
-                            Trailer = "url"
+                            Trailer = "https://www.youtube.com/watch?v=8ugaeA-nMTc"
                         },
                         new
                         {
@@ -195,10 +207,10 @@ namespace MovieCharacterAPI.Migrations
                             Director = "Peter Jackson",
                             FranchiseId = 2,
                             Genre = "Fantasy",
-                            MoviePicture = "url",
+                            MoviePicture = "https://th.bing.com/th/id/OIP.iu0nj0wNpcI0N-Pss_ihwQHaKw?pid=ImgDet&rs=1",
                             MovieTitle = "The fellowship of the ring",
                             ReleaseYear = "2001",
-                            Trailer = "url"
+                            Trailer = "https://www.youtube.com/watch?v=V75dMMIW2B4"
                         },
                         new
                         {
@@ -206,10 +218,10 @@ namespace MovieCharacterAPI.Migrations
                             Director = "Lewis Gilbert",
                             FranchiseId = 3,
                             Genre = "Action",
-                            MoviePicture = "url",
+                            MoviePicture = "https://th.bing.com/th/id/R.769e22f0f07bc67a3a5430a88d10dbd6?rik=eZJtqpB1%2b3MaJA&pid=ImgRaw&r=0",
                             MovieTitle = "Moonraker",
                             ReleaseYear = "1979",
-                            Trailer = "url"
+                            Trailer = "https://www.youtube.com/watch?v=KFOOjYU16KE"
                         },
                         new
                         {
@@ -217,10 +229,10 @@ namespace MovieCharacterAPI.Migrations
                             Director = "John Glen",
                             FranchiseId = 3,
                             Genre = "Action",
-                            MoviePicture = "url",
+                            MoviePicture = "https://i.pinimg.com/originals/79/b4/9b/79b49b9b10c0cf4c472167c60d65cd43.jpg",
                             MovieTitle = "Octopussy",
                             ReleaseYear = "1983",
-                            Trailer = "url"
+                            Trailer = "https://www.youtube.com/watch?v=q1hLWZzgZvU"
                         });
                 });
 
