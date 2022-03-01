@@ -32,6 +32,8 @@ namespace MovieCharacterAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Movie Character API", Version = "v1" });
             });
+
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
