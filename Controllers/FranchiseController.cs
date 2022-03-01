@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MovieCharacterAPI.Data;
 using MovieCharacterAPI.Models;
 using MovieCharacterAPI.Models.DTOs;
@@ -48,7 +51,7 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                var franchise = _context.Franchises.FirstOrDefault(f => f.Id == id.Value);
+                var franchise = await _context.Franchises.FirstOrDefaultAsync(f => f.Id == id.Value);
                 if (franchise != null)
                 {
                     _context.Franchises.Remove(franchise);
@@ -84,11 +87,11 @@ namespace MovieCharacterAPI.Controllers
         }
 
         [HttpGet("{id?}")]
-        public ActionResult<FranchiseDto> Get(int? id)
+        public async Task<ActionResult<FranchiseDto>> Get(int? id)
         {
             try
             {
-                var franchise = _context.Franchises.FirstOrDefault(f => f.Id == id.Value);
+                var franchise = await _context.Franchises.FirstOrDefaultAsync(f => f.Id == id.Value);
 
                 if (franchise != null)
                     return Ok(_mapper.Map<FranchiseDto>(franchise));                
@@ -106,12 +109,12 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                var franchise = _context.Franchises.FirstOrDefault(f => f.Id == id.Value);
+                var franchise = await _context.Franchises.FirstOrDefaultAsync(f => f.Id == id.Value);
                 if(franchise != null)
                 {
                     franchise.Description = updatedFranchise.Description;
                     franchise.Name = updatedFranchise.Name;
-                    franchise.Movies = updatedFranchise.Movies;
+                    //franchise.Movies = updatedFranchise.Movies;
 
                     bool hasChanges = await _context.SaveChangesAsync() > 0;
                     if (hasChanges)
