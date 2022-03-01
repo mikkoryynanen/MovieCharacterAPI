@@ -8,9 +8,10 @@ namespace MovieCharacterAPI.Models
     {
         public FranchiseProfile()
         {
-            CreateMap<FranchiseDto, Franchise>();
-            CreateMap<Franchise, FranchiseDto>();
-            CreateMap<FranchiseCreateDto, Franchise>();
+            CreateMap<Franchise, FranchiseDto>()
+                .ReverseMap();
+            CreateMap<FranchiseCreateDto, Franchise>()
+                .ReverseMap();
         }
     }
 }

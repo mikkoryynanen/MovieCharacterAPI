@@ -132,5 +132,39 @@ namespace MovieCharacterAPI.Controllers
 
             return BadRequest();
         }
+
+        //[HttpPut("update-movies/{id}")]
+        //public async Task<ActionResult<FranchiseDto>> UpdateMovies(int? id, [FromBody] int[] movieIds)
+        //{
+        //    try
+        //    {
+        //        var franchise = _context.Franchises.FirstOrDefaultAsync(f => f.Id == id.Value);
+        //        if (franchise != null)
+        //        {
+        //            var listOfMovieIds = franchise.MovieIds.ToList();
+        //            listOfMovieIds.AddRange(movieIds);
+        //            franchise.MovieIds = listOfMovieIds.ToArray();
+
+        //            //foreach (var movieId in movieIds)
+        //            //{
+        //            //    franchise.MovieIds.Add(movieId);
+        //            //}
+
+        //            bool hasChanges = await _context.SaveChangesAsync() > 0;
+        //            if (hasChanges)
+        //                return Ok(_mapper.Map<FranchiseDto>(franchise));
+        //        }
+        //        else
+        //        {
+        //            return NotFound($"Did not find Franchise with id {id.Value}");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        //    }
+
+        //    return BadRequest();
+        //}
     }
 }

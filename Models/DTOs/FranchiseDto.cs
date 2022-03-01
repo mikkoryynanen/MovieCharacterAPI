@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MovieCharacterAPI.Models;
 
 namespace MovieCharacterAPI.Models.DTOs
 {
@@ -6,6 +7,6 @@ namespace MovieCharacterAPI.Models.DTOs
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<Movie> Movies { get; set; }
+        public ICollection<MovieDto> Movies { get; set; }
     }
 }
