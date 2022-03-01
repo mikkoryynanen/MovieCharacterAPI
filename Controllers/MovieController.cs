@@ -118,15 +118,7 @@ namespace MovieCharacterAPI.Controllers
 
                     if (hasFranchise)
                     {
-                        movie.MovieTitle = updatedMovie.MovieTitle;
-                        movie.Genre = updatedMovie.Genre;
-                        movie.ReleaseYear = updatedMovie.MovieTitle;
-                        movie.Director = updatedMovie.Director;
-                        movie.MoviePicture = updatedMovie.MoviePicture;
-                        movie.Trailer = updatedMovie.Trailer;
-                        //movie.Characters = _mapper.Map<Character[]>(updatedMovie.Characters);
-                        movie.FranchiseId = updatedMovie.FranchiseId;
-                        //movie.Franchise = updatedMovie.Franchise;
+                        _context.Entry(movie).CurrentValues.SetValues(updatedMovie);
 
                         bool hasChanges = await _context.SaveChangesAsync() > 0;
                         if (hasChanges)
