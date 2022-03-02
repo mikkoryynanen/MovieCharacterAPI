@@ -231,40 +231,6 @@ namespace MovieCharacterAPI.Controllers
             return NoContent();
         }
 
-        //[HttpPut("{id}/movies")]
-        //public async Task<ActionResult<FranchiseDto>> UpdateMovies(int? id, [FromBody] int[] movieIds)
-        //{
-        //    try
-        //    {
-        //        var franchise = _context.Franchises.FirstOrDefaultAsync(f => f.Id == id.Value);
-        //        if (franchise != null)
-        //        {
-        //            var listOfMovieIds = franchise.MovieIds.ToList();
-        //            listOfMovieIds.AddRange(movieIds);
-        //            franchise.MovieIds = listOfMovieIds.ToArray();
-
-        //            //foreach (var movieId in movieIds)
-        //            //{
-        //            //    franchise.MovieIds.Add(movieId);
-        //            //}
-
-        //            bool hasChanges = await _context.SaveChangesAsync() > 0;
-        //            if (hasChanges)
-        //                return Ok(_mapper.Map<FranchiseDto>(franchise));
-        //        }
-        //        else
-        //        {
-        //            return NotFound($"Did not find Franchise with id {id.Value}");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        //    }
-
-        //    return BadRequest();
-        //}
-
         /// <summary>
         /// Update movies in franchise
         /// </summary>
@@ -272,7 +238,7 @@ namespace MovieCharacterAPI.Controllers
         /// <param name="movies">List of movies</param>
         /// <returns></returns>
         [HttpPut("{id}/movies")]
-        public async Task<IActionResult> UpdateFranchiseMovies(int id, List<int> movies)
+        public async Task<IActionResult> UpdateFranchiseMovies(int id, [FromBody] List<int> movies)
         {
             if (!FranchiseExists(id))
             {
@@ -287,7 +253,7 @@ namespace MovieCharacterAPI.Controllers
                 Movie newMovie = await _context.Movies.FindAsync(movieId);
                 if (newMovie == null)
                 {
-                    return BadRequest();
+                    return BadRequest($"Could not find movie with id {movieId}");
                 }
 
                 newMovies.Add(newMovie);
