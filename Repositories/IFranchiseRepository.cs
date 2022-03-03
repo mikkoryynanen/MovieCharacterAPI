@@ -9,11 +9,13 @@ namespace MovieCharacterAPI.Repositories
 {
     public interface IFranchiseRepository
     {
-        Task<IEnumerable<FranchiseDto>> GetAllFranchises();
-        Task<FranchiseDto> GetFranchise(int id);
-        Task<bool> PutFranchise(int id, FranchiseUpdateDto franchiseUpdate);
-        Task<FranchiseDto> PostFranchise(FranchiseCreateDto franchiseCreate);
-        Task<bool> DeleteFranchise(int id);
-        Task<bool> UpdateFranchiseMovies(int id, [FromBody] List<int> movies);
+        public bool FranchiseExists(int id);
+        Task<IEnumerable<Franchise>> GetAllFranchisesAsync();
+        Task<Franchise> GetFranchiseAsync(int id);
+        Task PutFranchiseAsync(Franchise franchise);
+        Task<Franchise> PostFranchiseAsync(Franchise franchise);
+        Task DeleteFranchiseAsync(int id);
+        Task UpdateFranchiseMoviesAsync(int franchiseId, List<int> movies);
+        Task<IEnumerable<Character>> GetFranchiseCharactersAsync(int id);
     }
 }
