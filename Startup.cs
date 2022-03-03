@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MovieCharacterAPI.Data;
+using MovieCharacterAPI.Repositories;
 
 namespace MovieCharacterAPI
 {
@@ -27,6 +28,8 @@ namespace MovieCharacterAPI
         {
             services.AddControllers();
             services.AddDbContext<MovieCharacterAPIDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IFranchiseRepository, FranchiseRepository>();
 
             services.AddSwaggerGen(c =>
             {
