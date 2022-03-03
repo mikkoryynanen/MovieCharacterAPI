@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieCharacterAPI.Data;
 using MovieCharacterAPI.Models;
 using MovieCharacterAPI.Models.DTOs;
+using MovieCharacterAPI.Repositories;
 
 namespace MovieCharacterAPI.Controllers
 {
@@ -16,13 +17,11 @@ namespace MovieCharacterAPI.Controllers
     [Route("[controller]/")]
     public class CharactersController : ControllerBase
     {
-        private readonly MovieCharacterAPIDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly ICharactersRepository _repository;
 
-        public CharactersController(MovieCharacterAPIDbContext context, IMapper mapper)
+        public CharactersController(ICharactersRepository repository)
         {
-            _context = context;
-            _mapper = mapper;
+            _repository = repository;
         }
 
         [HttpPost]
@@ -30,11 +29,8 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                _context.Characters.Add(_mapper.Map<Character>(newCharacter));
-                bool hasChanges = await _context.SaveChangesAsync() > 0;
-
-                if (hasChanges)
-                    return CreatedAtAction("Create", newCharacter);
+                if (await _repository.Create(newCharacter))
+                    return CreatedAtAction("CreateCharacter", newCharacter);
 
             }
             catch (Exception ex)
@@ -50,16 +46,12 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id.Value);
-                if (character != null)
-                {
-                    _context.Characters.Remove(character);
-                    bool hasChanges = await _context.SaveChangesAsync() > 0;
-                    return Ok();
-                }
+                if (await _repository.Delete(id))
+                    return Ok($"Character with id {id.Value} deleted");
             }
             catch (Exception ex)
             {
+
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
@@ -67,14 +59,13 @@ namespace MovieCharacterAPI.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<CharacterDto[]> GetAll()
+        public ActionResult<IEnumerable<CharacterDto>> GetAll()
         {
             try
             {
-                var characters = _context.Characters;
-
-                if (characters != null)
-                    return Ok(_mapper.Map<CharacterDto[]>(characters));
+                var characters = _repository.GetAll();
+                if(characters != null)
+                    return Ok(characters);
             }
             catch (Exception ex)
             {
@@ -89,10 +80,9 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id.Value);
-
+                var character = await _repository.Get(id);
                 if (character != null)
-                    return Ok(_mapper.Map<CharacterDto>(character));
+                    return Ok(character);
             }
             catch (Exception ex)
             {
@@ -107,15 +97,9 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id.Value);
-
-                if (character != null)
+                if (await _repository.Update(id, updatedCharacter))
                 {
-                    _context.Entry(character).CurrentValues.SetValues(updatedCharacter);
-
-                    bool hasChanges = await _context.SaveChangesAsync() > 0;
-                    if (hasChanges)
-                        return Ok(_mapper.Map<CharacterDto>(character));
+                    return Ok();
                 }
             }
             catch (Exception ex)

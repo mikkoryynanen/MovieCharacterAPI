@@ -30,6 +30,7 @@ namespace MovieCharacterAPI
             services.AddDbContext<MovieCharacterAPIDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IFranchiseRepository, FranchiseRepository>();
+            services.AddScoped<ICharactersRepository, CharactersRepository>();
 
             services.AddSwaggerGen(c =>
             {
