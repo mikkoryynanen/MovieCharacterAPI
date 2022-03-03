@@ -14,12 +14,10 @@ namespace MovieCharacterAPI.Repositories
     public class FranchiseRepository : IFranchiseRepository
     {
         private readonly MovieCharacterAPIDbContext _context;
-        private readonly IMapper _mapper;
 
-        public FranchiseRepository(MovieCharacterAPIDbContext context, IMapper mapper)
+        public FranchiseRepository(MovieCharacterAPIDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         /// <summary>
@@ -112,6 +110,24 @@ namespace MovieCharacterAPI.Repositories
 
             updatedMovies.Movies = newMovies;
             await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Get all characters in selected franchise
+        /// </summary>
+        /// <param name="id">Id of franchise</param>
+        /// <returns></returns>
+        public async Task <IEnumerable<Character>> GetFranchiseCharactersAsync(int id)
+        {
+            List<Movie> movies = await _context.Movies.Include(m => m.Characters).Where(m => m.FranchiseId == id).ToListAsync();
+            List <Character> characters = new();
+
+            foreach (Movie movie in movies)
+            {
+                characters.AddRange(movie.Characters);
+            }
+
+            return characters;
         }
     }
 }

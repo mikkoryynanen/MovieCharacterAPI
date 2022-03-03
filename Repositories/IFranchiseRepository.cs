@@ -16,6 +16,6 @@ namespace MovieCharacterAPI.Repositories
         Task<Franchise> PostFranchiseAsync(Franchise franchise);
         Task DeleteFranchiseAsync(int id);
         Task UpdateFranchiseMoviesAsync(int franchiseId, List<int> movies);
-        
+        Task<IEnumerable<Character>> GetFranchiseCharactersAsync(int id);
     }
 }
