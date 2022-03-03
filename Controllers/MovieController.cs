@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MovieCharacterAPI.Data;
-using MovieCharacterAPI.Models;
 using MovieCharacterAPI.Models.DTOs;
+using MovieCharacterAPI.Repositories;
 
 namespace MovieCharacterAPI.Controllers
 {
@@ -16,13 +11,11 @@ namespace MovieCharacterAPI.Controllers
     [Route("[controller]/")]
     public class MovieController : ControllerBase
     {
-        private readonly MovieCharacterAPIDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IMovieRepository _repository;
 
-        public MovieController(MovieCharacterAPIDbContext context, IMapper mapper)
+        public MovieController(IMovieRepository repository)
         {
-            _context = context;
-            _mapper = mapper;
+            _repository = repository;
         }
 
         [HttpPost]
@@ -30,15 +23,8 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                bool hasFranchise = await _context.Movies.FirstOrDefaultAsync(f => f.Id == newMovie.FranchiseId) != null;
-                if (!hasFranchise)
-                    return BadRequest($"Franchise with id {newMovie.FranchiseId} does not exist");
-
-                _context.Movies.Add(_mapper.Map<Movie>(newMovie));
-                bool hasChanges = await _context.SaveChangesAsync() > 0;
-
-                if (hasChanges)
-                    return CreatedAtAction("Create", newMovie);
+                if (await _repository.Create(newMovie))
+                    return CreatedAtAction("CreateMovie", newMovie);
 
             }
             catch (Exception ex)
@@ -54,13 +40,8 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id.Value);
-                if (movie != null)
-                {
-                    _context.Movies.Remove(movie);
-                    bool hasChanges = await _context.SaveChangesAsync() > 0;
+                if (await _repository.Delete(id))
                     return Ok();
-                }
             }
             catch (Exception ex)
             {
@@ -75,10 +56,10 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                var movies = _context.Movies;
+                var movies = _repository.GetAll();
 
                 if (movies != null)
-                    return Ok(_mapper.Map<MovieDto[]>(movies));
+                    return Ok(movies);
             }
             catch (Exception ex)
             {
@@ -93,10 +74,9 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                var movie = await _context.Movies.FirstOrDefaultAsync(f => f.Id == id.Value);
-
+                var movie = await _repository.Get(id);
                 if (movie != null)
-                    return Ok(_mapper.Map<MovieDto>(movie));
+                    return Ok(movie);
             }
             catch (Exception ex)
             {
@@ -111,28 +91,8 @@ namespace MovieCharacterAPI.Controllers
         {
             try
             {
-                var movie = await _context.Movies.FirstOrDefaultAsync(f => f.Id == id.Value);
-                if (movie != null)
-                {
-                    bool hasFranchise = await _context.Franchises.FirstOrDefaultAsync(f => f.Id == updatedMovie.FranchiseId) != null;
-
-                    if (hasFranchise)
-                    {
-                        _context.Entry(movie).CurrentValues.SetValues(updatedMovie);
-
-                        bool hasChanges = await _context.SaveChangesAsync() > 0;
-                        if (hasChanges)
-                            return Ok(_mapper.Map<MovieDto>(movie));
-                    }
-                    else
-                    {
-                        return BadRequest($"Could not find Franchise for movie '{updatedMovie.MovieTitle}' with id {updatedMovie.FranchiseId}");
-                    }
-                }
-                else
-                {
-                    return NotFound($"Did not find Franchise with id {id.Value}");
-                }
+                if (await _repository.Update(id, updatedMovie))
+                    return Ok(updatedMovie);
             }
             catch (Exception ex)
             {

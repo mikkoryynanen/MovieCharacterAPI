@@ -31,6 +31,7 @@ namespace MovieCharacterAPI
 
             services.AddScoped<IFranchiseRepository, FranchiseRepository>();
             services.AddScoped<ICharactersRepository, CharactersRepository>();
+            services.AddScoped<IMovieRepository, MovieRepository>();
 
             services.AddSwaggerGen(c =>
             {
