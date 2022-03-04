@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -13,107 +14,74 @@ namespace MovieCharacterAPI.Repositories
     public class CharactersRepository : ICharactersRepository
     {
         private readonly MovieCharacterAPIDbContext _context;
-        private readonly IMapper _mapper;
 
-        public CharactersRepository(MovieCharacterAPIDbContext context, IMapper mapper)
+        public CharactersRepository(MovieCharacterAPIDbContext context)
         {
             _context = context;
-            _mapper = mapper;
+        }
+        
+        /// <summary>
+        /// Check if character exists in database
+        /// </summary>
+        /// <param name="id">Id of character</param>
+        /// <returns></returns>
+        public bool CharacterExists(int id)
+        {
+            return _context.Characters.Any(c => c.Id == id);
         }
 
-        public async Task<bool> Create(CharacterCreateDto newCharacter)
+        /// <summary>
+        /// Get all characters from database
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Character>> GetAllCharactersAsync()
         {
-            try
-            {
-                _context.Characters.Add(_mapper.Map<Character>(newCharacter));
-                bool hasChanges = await _context.SaveChangesAsync() > 0;
-
-                if (hasChanges)
-                    return true;
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return false;
+            return await _context.Characters.ToListAsync();
         }
 
-        public async Task<bool> Delete(int? id)
+        /// <summary>
+        /// Get selected character from database by id
+        /// </summary>
+        /// <param name="id">Id of character</param>
+        /// <returns></returns>
+        public async Task<Character> GetCharacterAsync(int id)
         {
-            try
-            {
-                var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id.Value);
-                if (character != null)
-                {
-                    _context.Characters.Remove(character);
-                    bool hasChanges = await _context.SaveChangesAsync() > 0;
-                    return hasChanges;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return false;
+            return await _context.Characters.FindAsync(id);
         }
 
-        public async Task<CharacterDto> Get(int? id)
+        /// <summary>
+        /// Update selected character
+        /// </summary>
+        /// <param name="character">Character</param>
+        /// <returns></returns>
+        public async Task PutCharacterAsync(Character character)
         {
-            try
-            {
-                var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id.Value);
-
-                if (character != null)
-                    return _mapper.Map<CharacterDto>(character);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return null;
+            _context.Entry(character).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<CharacterDto> GetAll()
+        /// <summary>
+        /// Add new character to database
+        /// </summary>
+        /// <param name="character">Character</param>
+        /// <returns></returns>
+        public async Task<Character> PostCharacterAsync(Character character)
         {
-            try
-            {
-                var characters = _context.Characters;
-                if (characters != null)
-                    return _mapper.Map<IEnumerable<CharacterDto>>(characters);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return null;
+            _context.Characters.Add(character);
+            await _context.SaveChangesAsync();
+            return character;
         }
 
-        public async Task<bool> Update(int? id, CharacterCreateDto updatedCharacter)
+        /// <summary>
+        /// Delete selected character from database
+        /// </summary>
+        /// <param name="id">Id of character</param>
+        /// <returns></returns>
+        public async Task DeleteCharacterAsync(int id)
         {
-            try
-            {
-                var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id.Value);
-
-                if (character != null)
-                {
-                   _context.Entry(character).CurrentValues.SetValues(updatedCharacter);
-                    _context.Entry(character).State = EntityState.Modified;
-
-                    bool hasChanges = await _context.SaveChangesAsync() > 0;
-                    return hasChanges;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return false;
+            var character = await _context.Characters.FindAsync(id);
+            _context.Characters.Remove(character);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -5,9 +5,12 @@ namespace MovieCharacterAPI.Models.DTOs
     {
         public CharacterProfile()
         {
-            CreateMap<Character, CharacterDto>();
-            CreateMap<CharacterCreateDto, Character>();
-            CreateMap<CharacterCreateDto, CharacterDto>();
+            CreateMap<Character, CharacterDto>()
+                .ReverseMap();
+            CreateMap<Character, CharacterCreateDto>()
+                .ReverseMap();
+            CreateMap<Character, CharacterUpdateDto>()
+                .ReverseMap();
         }
     }
 }

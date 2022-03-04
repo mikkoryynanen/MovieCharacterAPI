@@ -16,11 +16,7 @@ using MovieCharacterAPI.Repositories;
 namespace MovieCharacterAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-
-    [Produces(MediaTypeNames.Application.Json)]
-    [Consumes(MediaTypeNames.Application.Json)]
-    [ApiConventionType(typeof(DefaultApiConventions))]
+    [Route("[controller]/")]
     public class FranchiseController : ControllerBase
     {
         private readonly IMapper _mapper;

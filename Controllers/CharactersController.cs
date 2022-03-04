@@ -17,97 +17,95 @@ namespace MovieCharacterAPI.Controllers
     [Route("[controller]/")]
     public class CharactersController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly ICharactersRepository _repository;
 
-        public CharactersController(ICharactersRepository repository)
+        public CharactersController(IMapper mapper ,ICharactersRepository repository)
         {
+            _mapper = mapper;
             _repository = repository;
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CharacterCreateDto newCharacter)
+        
+        /// <summary>
+        /// Get all characters from database
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CharacterDto>>> GetAllCharacters()
         {
-            try
-            {
-                if (await _repository.Create(newCharacter))
-                    return CreatedAtAction("CreateCharacter", newCharacter);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-
-            return BadRequest();
+            return _mapper.Map<List<CharacterDto>>(await _repository.GetAllCharactersAsync());
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int? id)
+        /// <summary>
+        /// Get selected character from database by id
+        /// </summary>
+        /// <param name="id">Id of character</param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CharacterDto>> GetCharacter(int id)
         {
-            try
-            {
-                if (await _repository.Delete(id))
-                    return Ok($"Character with id {id.Value} deleted");
-            }
-            catch (Exception ex)
-            {
+            Character character = await _repository.GetCharacterAsync(id);
 
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            if (character == null)
+            {
+                return NotFound();
             }
 
-            return BadRequest();
+            return _mapper.Map<CharacterDto>(character);
         }
 
-        [HttpGet("all")]
-        public ActionResult<IEnumerable<CharacterDto>> GetAll()
-        {
-            try
-            {
-                var characters = _repository.GetAll();
-                if(characters != null)
-                    return Ok(characters);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-
-            return NotFound("Movies not found");
-        }
-
-        [HttpGet("{id?}")]
-        public async Task<ActionResult<CharacterDto>> Get(int? id)
-        {
-            try
-            {
-                var character = await _repository.Get(id);
-                if (character != null)
-                    return Ok(character);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-
-            return NotFound($"Could not find Character with ID {id.Value}");
-        }
-
+        /// <summary>
+        /// Update selecter character
+        /// </summary>
+        /// <param name="id">Id of character</param>
+        /// <param name="characterUpdate">Character update DTO</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<ActionResult<CharacterDto>> Update(int? id, [FromBody] CharacterCreateDto updatedCharacter)
+        public async Task<IActionResult> PutCharacter(int id, CharacterUpdateDto characterUpdate)
         {
-            try
+            if (id != characterUpdate.Id)
             {
-                if (await _repository.Update(id, updatedCharacter))
-                {
-                    return Ok();
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return BadRequest();
             }
 
-            return BadRequest();
+            if (!_repository.CharacterExists(id))
+            {
+                return NotFound();
+            }
+
+            Character characterDomain = _mapper.Map<Character>(characterUpdate);
+            await _repository.PutCharacterAsync(characterDomain);
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Add new character to database
+        /// </summary>
+        /// <param name="characterCreate">Character create DTO</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<Character>> PostCharacter(CharacterCreateDto characterCreate)
+        {
+            Character characterDomain = _mapper.Map<Character>(characterCreate);
+            characterDomain = await _repository.PostCharacterAsync(characterDomain);
+            return CreatedAtAction("GetCharacter", new { id = characterDomain.Id }, _mapper.Map<CharacterDto>(characterDomain));
+        }
+
+        /// <summary>
+        /// Delete selected character from database
+        /// </summary>
+        /// <param name="id">Id of character</param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCharacter(int id)
+        {
+            if (!_repository.CharacterExists(id))
+            {
+                return NotFound();
+            }
+
+            await _repository.DeleteCharacterAsync(id);
+            return NoContent();
         }
     }
 }
