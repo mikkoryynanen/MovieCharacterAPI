@@ -15,10 +15,24 @@
     <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
     <None Remove="Models\DTOs\" />
     <None Remove="Repositories\" />
+    <None Remove="Profiles\" />
+    <None Remove="Models\DTOs\Character\" />
+    <None Remove="Models\DTOs\Franchise\" />
+    <None Remove="Models\DTOs\Movie\" />
+    <None Remove="Repositories\Character\" />
+    <None Remove="Repositories\Franchise\" />
+    <None Remove="Repositories\Movie\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Repositories\" />
+    <Folder Include="Profiles\" />
+    <Folder Include="Models\DTOs\Character\" />
+    <Folder Include="Models\DTOs\Franchise\" />
+    <Folder Include="Models\DTOs\Movie\" />
+    <Folder Include="Repositories\Character\" />
+    <Folder Include="Repositories\Franchise\" />
+    <Folder Include="Repositories\Movie\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.14" />
